@@ -1,0 +1,33 @@
+/*
+ * src/content/styles/focus-mode.css
+ *
+ * Deliberately tiny. Every rule module in src/content/rules decides WHICH
+ * elements to hide (using selectors.ts) and marks them with one of the
+ * classes below; this file only decides HOW hiding looks. Class names here
+ * must match HIDE_CLASSES in src/shared/constants.ts exactly.
+ *
+ * `display: none !important` is used (rather than visibility/opacity) so
+ * hidden elements also stop taking up layout space — important for shelves
+ * and grid items where a hidden-but-space-reserving element would leave an
+ * empty gap.
+ */
+
+.yfm-hidden-shorts,
+.yfm-hidden-recommendations,
+.yfm-hidden-navigation,
+.yfm-hidden-watch-sidebar,
+.yfm-hidden-comments {
+  display: none !important;
+}
+
+/*
+ * Optional: when the watch-page sidebar (Up Next / related column) is
+ * hidden, YouTube's two-column layout can leave a wide empty gutter. This
+ * lets the primary video column reflow to use the freed space instead of
+ * floating in a half-empty page. Scoped tightly to avoid fighting YouTube's
+ * own responsive layout rules on narrower viewports.
+ */
+html[data-yfm-focus-mode="on"] #primary.ytd-watch-flexy {
+  max-width: 1400px;
+  margin: 0 auto;
+}

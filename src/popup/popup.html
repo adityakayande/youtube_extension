@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="color-scheme" content="light dark" />
+  <title>YouTube Focus Mode</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app" data-theme="system">
+
+    <header class="header">
+      <div class="aperture" id="aperture" aria-hidden="true">
+        <svg viewBox="0 0 64 64" class="aperture__svg">
+          <circle cx="32" cy="32" r="30" class="aperture__ring" />
+          <g class="aperture__blades" id="apertureBlades">
+            <path class="aperture__blade" d="M32 32 L32 6 A26 26 0 0 1 54.5 19 Z" />
+            <path class="aperture__blade" d="M32 32 L54.5 19 A26 26 0 0 1 54.5 45 Z" />
+            <path class="aperture__blade" d="M32 32 L54.5 45 A26 26 0 0 1 32 58 Z" />
+            <path class="aperture__blade" d="M32 32 L32 58 A26 26 0 0 1 9.5 45 Z" />
+            <path class="aperture__blade" d="M32 32 L9.5 45 A26 26 0 0 1 9.5 19 Z" />
+            <path class="aperture__blade" d="M32 32 L9.5 19 A26 26 0 0 1 32 6 Z" />
+          </g>
+        </svg>
+      </div>
+      <div class="header__text">
+        <h1 class="header__title">Focus Mode</h1>
+        <p class="header__status" id="statusLabel">Active — only your subscriptions</p>
+      </div>
+    </header>
+
+    <section class="master">
+      <label class="row row--master">
+        <span class="row__label">Focus Mode</span>
+        <span class="switch">
+          <input type="checkbox" id="focusModeEnabled" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="group" id="featureGroup">
+      <h2 class="group__title">On this site</h2>
+
+      <label class="row">
+        <span class="row__label">Hide Shorts</span>
+        <span class="switch">
+          <input type="checkbox" id="hideShorts" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+
+      <label class="row">
+        <span class="row__label">Hide recommendations</span>
+        <span class="switch">
+          <input type="checkbox" id="hideRecommendations" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+
+      <label class="row">
+        <span class="row__label">Hide "Up next" sidebar</span>
+        <span class="switch">
+          <input type="checkbox" id="hideSidebar" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+
+      <label class="row">
+        <span class="row__label">Hide comments</span>
+        <span class="switch">
+          <input type="checkbox" id="hideComments" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+
+      <label class="row">
+        <span class="row__label">Disable autoplay</span>
+        <span class="switch">
+          <input type="checkbox" id="disableAutoplay" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="group">
+      <label class="row">
+        <span class="row__label">Schedule</span>
+        <span class="switch">
+          <input type="checkbox" id="scheduleEnabled" />
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+        </span>
+      </label>
+
+      <div class="schedule" id="scheduleDetails">
+        <div class="schedule__times">
+          <label class="schedule__field">
+            <span>Starts</span>
+            <input type="time" id="scheduleStart" />
+          </label>
+          <label class="schedule__field">
+            <span>Ends</span>
+            <input type="time" id="scheduleEnd" />
+          </label>
+        </div>
+        <div class="schedule__days" id="scheduleDays" role="group" aria-label="Repeat on days">
+          <button type="button" class="day" data-day="0">S</button>
+          <button type="button" class="day" data-day="1">M</button>
+          <button type="button" class="day" data-day="2">T</button>
+          <button type="button" class="day" data-day="3">W</button>
+          <button type="button" class="day" data-day="4">T</button>
+          <button type="button" class="day" data-day="5">F</button>
+          <button type="button" class="day" data-day="6">S</button>
+        </div>
+        <p class="schedule__hint">No days selected applies every day.</p>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2 class="group__title">Appearance</h2>
+      <div class="segmented" id="themeSegmented" role="radiogroup" aria-label="Theme">
+        <button type="button" class="segmented__option" data-theme-option="system">System</button>
+        <button type="button" class="segmented__option" data-theme-option="light">Light</button>
+        <button type="button" class="segmented__option" data-theme-option="dark">Dark</button>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="row row--static">
+        <span class="row__label">Keyboard shortcut</span>
+        <span class="kbd" id="shortcutDisplay">Not set</span>
+      </div>
+      <button type="button" class="link-button" id="changeShortcutBtn">Change shortcut →</button>
+    </section>
+
+    <footer class="footer">
+      <button type="button" class="reset-button" id="resetBtn">Reset to defaults</button>
+    </footer>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

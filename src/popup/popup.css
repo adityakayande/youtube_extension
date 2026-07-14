@@ -1,0 +1,384 @@
+/*
+ * src/popup/popup.css
+ *
+ * Design tokens
+ * -------------
+ * Color   #1B1F2A (slate, dark bg) · #F7F8FA (cool neutral, light bg)
+ *         #F5A623 (amber "spotlight" accent) · #2DD4A8 (teal, reserved for
+ *         schedule/secondary accents) · muted grays for text hierarchy.
+ * Type    System UI stack throughout for offline reliability inside an
+ *         extension popup, but with a deliberate scale: a heavier, tighter
+ *         display weight for the title and a mono face for the shortcut chip.
+ * Motion  One orchestrated moment (the aperture opening/closing) — the
+ *         switches themselves use short, quiet transitions and nothing else
+ *         animates, per prefers-reduced-motion below.
+ * Signature: the aperture (iris) icon in the header, whose blades physically
+ *         close to a point when Focus Mode is ON and open when it's OFF —
+ *         the metaphor of the whole extension made literal.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --font-display: -apple-system, "Segoe UI", Roboto, ui-sans-serif, system-ui, sans-serif;
+  --font-body: -apple-system, "Segoe UI", Roboto, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --accent: #f5a623;
+  --accent-strong: #e0921a;
+  --accent-soft: rgba(245, 166, 35, 0.16);
+  --teal: #2dd4a8;
+}
+
+.app[data-resolved-theme="dark"] {
+  --bg: #1b1f2a;
+  --surface: #242938;
+  --surface-raised: #2b3142;
+  --text: #edeef2;
+  --text-muted: #9aa3b5;
+  --border: rgba(255, 255, 255, 0.08);
+  --track-off: #3a4154;
+}
+
+.app[data-resolved-theme="light"] {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --text: #1b1f2a;
+  --text-muted: #6b7280;
+  --border: rgba(15, 23, 42, 0.09);
+  --track-off: #d7dbe3;
+}
+
+body {
+  margin: 0;
+  width: 340px;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 14px;
+}
+
+/* ---------- Header + signature aperture ---------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.aperture {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+
+.aperture__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.aperture__ring {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.aperture__blade {
+  fill: var(--accent);
+  transform-origin: 32px 32px;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), opacity 420ms ease;
+}
+
+/* OFF state: blades swing fully out of the circle, leaving an open aperture. */
+#apertureBlades.is-open .aperture__blade {
+  transform: scale(0.15) rotate(20deg);
+  opacity: 0.35;
+}
+
+/* ON state: blades sit at native size, overlapping to form a closed iris. */
+#apertureBlades.is-closed .aperture__blade {
+  transform: scale(1) rotate(0deg);
+  opacity: 1;
+}
+
+.header__text {
+  min-width: 0;
+}
+
+.header__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 2px;
+}
+
+.header__status {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Rows + switches ---------- */
+
+.master {
+  padding: 12px 0 6px;
+}
+
+.group {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.group__title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.row--master .row__label {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.row--static {
+  cursor: default;
+}
+
+.row__label {
+  font-size: 13.5px;
+}
+
+#featureGroup.is-dimmed {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  flex: none;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.switch__track {
+  position: absolute;
+  inset: 0;
+  background: var(--track-off);
+  border-radius: 999px;
+  transition: background 160ms ease;
+}
+
+.switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease;
+}
+
+.switch input:checked + .switch__track {
+  background: var(--accent);
+}
+
+.switch input:checked + .switch__track .switch__thumb {
+  transform: translateX(16px);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Schedule ---------- */
+
+.schedule {
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.schedule__times {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.schedule__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+.schedule__field input {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.schedule__days {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.day {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.day.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.schedule__hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+
+/* ---------- Theme segmented control ---------- */
+
+.segmented {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segmented__option {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 12.5px;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.segmented__option.is-active {
+  background: var(--accent);
+  color: #1b1f2a;
+  font-weight: 600;
+}
+
+/* ---------- Shortcut + footer ---------- */
+
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 7px;
+  color: var(--text-muted);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--accent-strong);
+  font-size: 12.5px;
+  font-family: var(--font-body);
+  padding: 6px 0 0;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.reset-button {
+  width: 100%;
+  padding: 9px 0;
+  font-size: 12.5px;
+  font-family: var(--font-body);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.reset-button:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aperture__blade,
+  .switch__track,
+  .switch__thumb,
+  .day,
+  .segmented__option {
+    transition: none !important;
+  }
+}

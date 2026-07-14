@@ -1,0 +1,19 @@
+{
+  "name": "youtube-focus-mode",
+  "version": "1.0.0",
+  "description": "Turn YouTube into a distraction-free learning platform by hiding algorithmic recommendations, Shorts, and autoplay.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0",
+    "typescript": "^5.5.4",
+    "@types/chrome": "^0.0.269"
+  },
+  "license": "MIT"
+}
